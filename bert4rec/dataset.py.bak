@@ -1,0 +1,62 @@
+import paddle
+from paddle.io import Dataset
+from paddle.vision.transforms import Compose, Resize
+import numpy as np
+import random
+import linecache
+
+
+class DataReader(Dataset):
+    def __init__(self, data_path, batch_size, max_len, num=0):
+        super(DataReader, self).__init__()
+        f_data = open(data_path, "r")
+        self.samples = f_data.read().splitlines()
+        self.data_dir = data_path
+        self.num_samples = len(self.samples)
+        #print(len(open(data_path,'rU').readlines()))
+        self.batch_size = batch_size
+        self.num_samples = self.num_samples//batch_size
+        self.max_len = max_len
+
+    def read_file(self, file_path):
+        assert file.endswith('.gz'), "[ERROR] %s is not a gzip file" % file
+        with gzip.open(file_path, "rb") as f:
+            for line in f:
+                parsed_line = line
+                if parsed_line is None:
+                    continue
+                yield parsed_line
+
+    def __getitem__(self, index):
+        src_ids= []
+        pos_ids= []
+        input_mask= []
+        mask_pos= []
+        mask_label = []
+        for i in range(self.batch_size):
+            split_samples = self.samples[index*self.batch_size+i].split(";") #linecache.getline(self.data_dir, self.sample_lines[index*self.batch_size+i]).split(";")  #self.samples[index*self.batch_size+i].split(";")
+            
+            tmp_ids = split_samples[1].split(',')
+            src_ids.append([int(x) for x in tmp_ids])
+            tmp_pos = split_samples[3].split(',')
+            pos_ids.append([int(x) for x in tmp_pos])
+            tmp_mask = split_samples[2].split(',')
+            input_mask.append([[int(x)] for x in tmp_mask])
+            tmp_mask_pos = split_samples[4].split(',')
+            mask_pos = mask_pos + [[int(x)+i*self.max_len] for x in tmp_mask_pos]
+            tmp_label = split_samples[5].split(',')
+            mask_label = mask_label + [[int(x)] for x in tmp_label]
+        #print(src_ids, pos_ids, input_mask,  mask_pos, mask_label)
+        src_ids= np.array(src_ids)
+        pos_ids= np.array(pos_ids)
+        input_mask= np.array(input_mask)
+        mask_pos= np.array(mask_pos)
+        mask_label = np.array(mask_label)
+        #np.savetxt("src_ids.txt", src_ids, fmt ='%d')
+        #print(mask_pos.reshape(1,-1), mask_label.reshape(1,-1))
+        return src_ids, pos_ids, input_mask,  mask_pos, mask_label
+
+    def __len__(self):
+        random.shuffle(self.samples)
+        print(self.num_samples)
+        return self.num_samples
