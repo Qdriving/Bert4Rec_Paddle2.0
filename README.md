@@ -22,4 +22,7 @@ Bert4Rec时基于以上，将bert应用到推荐系统：
 |-- |-- transformer_encoder20.py		# transformer模型的encoder部分，bert是基于该网络进行的 paddle2.0修改
 |-- trainrec.py				# bert4rec模型的训练脚本
 |-- train.sh				# 训练脚本
+|-- bert_train
+|-- |-- gen_data_fin.py    # 数据预处理，将原始数据处理为飞桨模型读取的数据
+|-- |-- bert_config_ml-1m_256.json    # 配置文件
 ```
