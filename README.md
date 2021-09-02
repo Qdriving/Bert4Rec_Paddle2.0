@@ -48,15 +48,15 @@ Bert4Rec时基于以上，将bert应用到推荐系统：
 "vocab_size":int3420
 
 train.sh 超参设置
-BATCH_SIZE=256 
-WARMUP_STEPS=200
-LR_RATE=1e-3   # 原文的lr为 1e-4, 这里设置为1e-3发现模型能够更快收敛，且top-10 精度超过原文很多
-WEIGHT_DECAY=0.01
-MAX_LEN=200
-TRAIN_DATA_DIR=bert_train/data/ml-1m-test.txt    
-VALIDATION_DATA_DIR=bert_train/data/ml-1m-test.txt     
-CONFIG_PATH=bert_train/bert_config_ml-1m_256.json  
-VOCAB_PATH=data/demo_config/vocab.txt
+--BATCH_SIZE=256 
+--WARMUP_STEPS=200
+--LR_RATE=1e-3   # 原文的lr为 1e-4, 这里设置为1e-3发现模型能够更快收敛，且top-10 精度超过原文很多
+--WEIGHT_DECAY=0.01
+--MAX_LEN=200
+--TRAIN_DATA_DIR=bert_train/data/ml-1m-test.txt    
+--VALIDATION_DATA_DIR=bert_train/data/ml-1m-test.txt     
+--CONFIG_PATH=bert_train/bert_config_ml-1m_256.json  
+--VOCAB_PATH=data/demo_config/vocab.txt
 
 开启训练：
 !chmod +x train.sh
