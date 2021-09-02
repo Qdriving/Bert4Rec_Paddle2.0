@@ -26,3 +26,38 @@ Bert4Rec时基于以上，将bert应用到推荐系统：
 |-- |-- gen_data_fin.py    # 数据预处理，将原始数据处理为飞桨模型读取的数据
 |-- |-- bert_config_ml-1m_256.json    # 配置文件
 ```
+
+# 复现步骤
+ 处理原始数据，生成ml-1m-train.txt ml-1m-test.txt
+  关键参数说明：
+         --dupe_factor  在原始数据上进行10次随机mask增强数据， 可根据实际情况调节
+!cd ./bert_train/ && python gen_data_fin.py
+
+模型结构：
+
+"attention_probs_dropout_prob":float0.2
+"hidden_act":string"gelu"
+"hidden_dropout_prob":float0.5
+"hidden_size":int256
+"initializer_range":float0.02
+"intermediate_size":int1024
+"max_position_embeddings":int200
+"num_attention_heads":int8
+"num_hidden_layers":int2
+"type_vocab_size":int2
+"vocab_size":int3420
+
+train.sh 超参设置
+BATCH_SIZE=256 
+WARMUP_STEPS=200
+LR_RATE=1e-3   # 原文的lr为 1e-4, 这里设置为1e-3发现模型能够更快收敛，且top-10 精度超过原文很多
+WEIGHT_DECAY=0.01
+MAX_LEN=200
+TRAIN_DATA_DIR=bert_train/data/ml-1m-test.txt    
+VALIDATION_DATA_DIR=bert_train/data/ml-1m-test.txt     
+CONFIG_PATH=bert_train/bert_config_ml-1m_256.json  
+VOCAB_PATH=data/demo_config/vocab.txt
+
+开启训练：
+!chmod +x train.sh
+!./train.sh -local y
