@@ -83,3 +83,11 @@ train.sh 超参设置
 !chmod +x train.sh
 
 !./train.sh -local y
+
+
+# 复现结果
+使用ml-1m数据进行复现，调整初始lr为1e-3,训练150个epoch后，  ml-1m HR@10=0.98
+
+![image](https://user-images.githubusercontent.com/35327911/131813731-0c465d9e-5848-4464-ace3-75dbe8ca7fef.png)
+
+
